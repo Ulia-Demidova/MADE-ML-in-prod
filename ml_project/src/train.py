@@ -12,7 +12,7 @@ from src.models import (train_model,
                         predict_probabilities,
                         evaluate_model)
 
-handler = logging.FileHandler("../logs/train.log")
+handler = logging.FileHandler("logs/train.log")
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)

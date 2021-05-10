@@ -9,11 +9,11 @@ pip install -e .
 ~~~
 Train:
 ~~~
-python train.py configs/train_logred_config.yaml
+python src/train.py configs/train_logreg_config.yaml
 ~~~
 Predict:
 ~~~
-python predict.py configs/predict_config.yaml
+python src/predict.py configs/predict_config.yaml
 ~~~
 Test:
 ~~~

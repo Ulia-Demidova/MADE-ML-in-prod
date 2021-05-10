@@ -1,10 +1,5 @@
 import pickle
-from typing import Union
-
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-
-SklearnClassificationModel = Union[RandomForestClassifier, LogisticRegression]
+from src.models import SklearnClassificationModel
 
 
 def save_model(model: SklearnClassificationModel, output: str) -> str:
