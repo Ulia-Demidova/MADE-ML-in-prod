@@ -1,11 +1,12 @@
 from src.models import save_model, load_model, train_model
 import pytest
 import pandas as pd
-from typing import List, Tuple
+from typing import Tuple
 from src.enities import TrainParams
 from src.features import build_transformer, make_features, fit_transformer, extract_target
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.utils.validation import check_is_fitted
 import os
 
 
@@ -22,7 +23,7 @@ def test_fit_model(features_and_target: Tuple[pd.DataFrame, pd.Series]):
     features, target = features_and_target
     model = train_model(features, target, TrainParams())
     assert isinstance(model, LogisticRegression)
-    assert model.predict(features).shape[0] == target.shape[0]
+    check_is_fitted(model, attributes=["coef_", "intercept_"])
 
 
 def test_save_load_model(tmpdir):
