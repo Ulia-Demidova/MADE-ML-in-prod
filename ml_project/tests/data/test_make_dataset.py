@@ -14,4 +14,5 @@ def test_split_data(sample_data):
     val_size = 0.2
     split_params = SplittingParams(val_size=val_size, random_state=123)
     train, val = split_train_val(sample_data, split_params)
-    assert len(train) > len(val)
+    assert int(0.8 * len(sample_data)) == len(train)
+    assert len(sample_data) - len(train) == len(val)
