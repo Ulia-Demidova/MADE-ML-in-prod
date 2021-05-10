@@ -1,4 +1,4 @@
-from train import train_pipeline
+from src.train import train_pipeline
 from src.enities import TrainPipelineParams, TrainParams
 from src.enities.splitting_params import SplittingParams
 from src.enities.feature_params import FeatureParams
