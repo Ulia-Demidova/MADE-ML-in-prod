@@ -1,0 +1,21 @@
+input_data_path: "data/raw/heart.csv"
+model_path: "models/model.pkl"
+preds_path: "data/predict/predict.csv"
+feature_params:
+  categorical_features:
+    - "cp"
+    - "restecg"
+    - "slope"
+    - "ca"
+    - "thal"
+  numerical_features:
+    - "age"
+    - "trestbps"
+    - "chol"
+    - "thalach"
+    - "oldpeak"
+  binary_features:
+    - "sex"
+    - "fbs"
+    - "exang"
+  target_col: "target"
