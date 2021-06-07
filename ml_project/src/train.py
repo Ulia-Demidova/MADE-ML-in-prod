@@ -59,8 +59,11 @@ def train_pipeline(params: TrainPipelineParams):
     logger.info(f"metrics is {metrics}")
 
     path_to_model = save_model(model, params.output_model_path)
+    path_to_transformer = save_model(
+        transformer, params.output_transformer_path
+    )
 
-    return path_to_model, metrics
+    return path_to_model, path_to_transformer, metrics
 
 
 @click.command(name="train")
