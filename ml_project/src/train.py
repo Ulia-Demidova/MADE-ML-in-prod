@@ -8,6 +8,7 @@ from src.features import (build_transformer,
                           extract_target,
                           fit_transformer)
 from src.models import (train_model,
+                        create_inference_pipeline,
                         save_model,
                         predict_probabilities,
                         evaluate_model)
@@ -28,25 +29,28 @@ def train_pipeline(params: TrainPipelineParams):
     logger.info(f"train_df.shape is {train_df.shape}")
     logger.info(f"val_df.shape is {val_df.shape}")
 
+    train_target = extract_target(train_df, params.feature_params)
+    train_df = train_df.drop(params.feature_params.target_col, 1)
+    val_target = extract_target(val_df, params.feature_params)
+    val_df = val_df.drop(params.feature_params.target_col, 1)
+
     transformer = build_transformer(params.feature_params)
     transformer, train = fit_transformer(transformer, train_df)
     train_features = make_features(transformer, train)
-    train_target = extract_target(train, params.feature_params)
-    logger.debug("Split data...")
 
     logger.info(f"train_features.shape is {train_features.shape}")
 
+    logger.debug("Train model...")
     model = train_model(
         train_features, train_target, params.train_params
     )
 
-    val_features = make_features(transformer, val_df)
-    val_target = extract_target(val_df, params.feature_params)
+    inference_pipeline = create_inference_pipeline(model, transformer)
 
-    logger.info(f"val_features.shape is {val_features.shape}")
+    logger.debug("Validate model...")
     probabilities = predict_probabilities(
-        model,
-        val_features
+        inference_pipeline,
+        val_df
     )
 
     metrics = evaluate_model(
@@ -58,12 +62,9 @@ def train_pipeline(params: TrainPipelineParams):
         json.dump(metrics, metric_file)
     logger.info(f"metrics is {metrics}")
 
-    path_to_model = save_model(model, params.output_model_path)
-    path_to_transformer = save_model(
-        transformer, params.output_transformer_path
-    )
+    path_to_model = save_model(inference_pipeline, params.output_model_path)
 
-    return path_to_model, path_to_transformer, metrics
+    return path_to_model, metrics
 
 
 @click.command(name="train")

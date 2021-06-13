@@ -15,12 +15,10 @@ def test_e2e(tmpdir: LocalPath,
     sample_data.to_csv(data_path)
 
     expected_model_path = tmpdir.join("model.pkl")
-    expected_transform_path = tmpdir.join("transform.pkl")
     expected_metric_path = tmpdir.join("metrics.json")
-    path_to_model, path_to_transformer, metrics = train_pipeline(TrainPipelineParams(
+    path_to_model, metrics = train_pipeline(TrainPipelineParams(
         input_data_path=data_path,
         output_model_path=expected_model_path,
-        output_transformer_path=expected_transform_path,
         metric_path=expected_metric_path,
         splitting_params=SplittingParams(0.2, 123),
         train_params=TrainParams("LogisticRegression"),
@@ -31,5 +29,4 @@ def test_e2e(tmpdir: LocalPath,
     assert "accuracy" in metrics
     assert metrics["accuracy"] > 0
     assert path_to_model == expected_model_path
-    assert path_to_transformer == expected_transform_path
     assert os.path.exists(path_to_model)

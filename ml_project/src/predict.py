@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from src.enities import read_predict_params, PredictParams
 from src.data import read_data
-from src.features import make_features
 from src.models import load_model, predict
 
 
@@ -13,10 +12,8 @@ def save_data(path: str, data: np.array):
 
 def predict_pipeline(params: PredictParams):
     data = read_data(params.input_data_path)
-    transformer = load_model(params.transformer_path)
-    features = make_features(transformer, data)
-    model = load_model(params.model_path)
-    predicts = predict(model, features)
+    pipeline = load_model(params.model_path)
+    predicts = predict(pipeline, data)
     save_data(params.preds_path, predicts)
 
 

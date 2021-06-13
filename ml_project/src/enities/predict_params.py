@@ -8,7 +8,6 @@ import yaml
 class PredictParams:
     input_data_path: str
     model_path: str
-    transformer_path: str
     preds_path: str
     feature_params: FeatureParams
 

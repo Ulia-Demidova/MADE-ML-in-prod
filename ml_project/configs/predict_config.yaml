@@ -1,6 +1,5 @@
 input_data_path: "data/raw/heart.csv"
 model_path: "models/model.pkl"
-transformer_path: "models/transformer.pkl"
 preds_path: "data/predict/predict.csv"
 feature_params:
   categorical_features:
