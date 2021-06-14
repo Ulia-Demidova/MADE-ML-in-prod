@@ -5,20 +5,7 @@ from typing import Dict
 import json
 
 import pandas as pd
-import numpy as np
-from sklearn.metrics import roc_auc_score, f1_score, accuracy_score
-
-
-THRESHOLD = 0.5
-
-
-def evaluate_model(probabilities: np.ndarray, target: pd.Series) -> Dict[str, float]:
-    predicts = (probabilities > THRESHOLD).astype(int)
-    return {
-        "roc_auc_score": roc_auc_score(target, probabilities),
-        "f1_score": f1_score(target, predicts),
-        "accuracy": accuracy_score(target, predicts),
-    }
+from sklearn.metrics import accuracy_score
 
 
 @click.command("validate")
@@ -31,8 +18,8 @@ def validate(data_dir: str, model_dir: str):
     with open(os.path.join(model_dir, "model.pkl"), 'rb') as f:
         model = pickle.loads(f.read())
 
-    probabilities = model.predict_proba(data)[:, 1]
-    metrics = evaluate_model(probabilities, target)
+    predicts = model.predict(data)
+    metrics = {"accuracy": accuracy_score(target, predicts)}
     with open(os.path.join(model_dir, "metrics.json"), "w") as f:
         json.dump(metrics, f)
 

@@ -3,30 +3,32 @@ import os
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.sensors.filesystem import FileSensor
-from airflow.utils.dates import days_ago
+from datetime import datetime
 
-from .utils import default_args, VOLUME
+from utils import default_args, VOLUME
 
 
 with DAG(
     dag_id="02-train-val",
     default_args=default_args,
-    sheduler_interval="@weekly",
-    start_date=days_ago(7)
+    schedule_interval="@weekly",
+    start_date=datetime.today()
 ) as dag:
 
     data_sensor = FileSensor(
         task_id="wait_for_raw_data",
-        filepath=os.path.join("/data/raw/{{ ds }}", "data.csv"),
-        timeout=6000,
+        fs_conn_id="fs_default",
+        filepath="data/raw/{{ ds }}/data.csv",
+        timeout=600,
         poke_interval=10,
         retries=100,
     )
 
     target_sensor = FileSensor(
         task_id="wait_for_target",
-        filepath=os.path.join("/data/raw/{{ ds }}", "target.csv"),
-        timeout=6000,
+        fs_conn_id="fs_default",
+        filepath="data/raw/{{ ds }}/target.csv",
+        timeout=600,
         poke_interval=10,
         retries=100,
     )
