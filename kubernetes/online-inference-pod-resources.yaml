@@ -3,11 +3,11 @@ kind: Pod
 metadata:
   name: pod-resources
   labels:
-    app: pod-resources
+    app: fastapi-ml
 spec:
   containers:
     - image: yuliyademidova/online_inference:v1
-      name: pod-resources
+      name: fastapi-ml
       ports:
         - containerPort: 8000
       resources:
