@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-pod
+  labels:
+    app: simple-pod
+spec:
+  containers:
+    - image: yuliyademidova/online_inference:v1
+      name: simple-pod
+      ports:
+        - containerPort: 8000
