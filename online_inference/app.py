@@ -2,10 +2,11 @@ import logging
 import os
 import pickle
 from typing import List, Union, Optional
+import time
 
 import pandas as pd
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, conlist
 from sklearn.pipeline import Pipeline
 
@@ -31,6 +32,7 @@ class HeartDiseaseResponse(BaseModel):
 
 
 model: Optional[Pipeline] = None
+start: float = 0.
 
 
 def make_predict(
@@ -51,6 +53,13 @@ def main():
 
 
 @app.on_event("startup")
+def sleep_few_seconds():
+    time.sleep(20)
+    global start
+    start = time.time()
+
+
+@app.on_event("startup")
 def load_model():
     global model
     model_path = os.getenv("PATH_TO_MODEL")
@@ -60,6 +69,13 @@ def load_model():
         raise RuntimeError(err)
 
     model = load_object(model_path)
+
+
+@app.get("/health")
+def health() -> bool:
+    if time.time() - start > 120:
+        raise HTTPException(404)
+    return not (model is None)
 
 
 @app.get("/predict/", response_model=List[HeartDiseaseResponse])
